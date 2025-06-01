@@ -263,14 +263,7 @@ function drawCoordinateLabels(
     ctx.fillText(`${y}"`, 30, screenY);
   }
   
-  // Field labels
-  ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-  ctx.font = '14px sans-serif';
-  ctx.fillText('Red Alliance', width / 2 + 60 * scale, 20);
-  ctx.fillText('Blue Alliance', width / 2 - 60 * scale, 20);
-  ctx.fillText('Audience', width - 60, height / 2);
-  ctx.fillText('Backstage', 60, height / 2);
+  // Field labels removed for cleaner display
 }
 
 

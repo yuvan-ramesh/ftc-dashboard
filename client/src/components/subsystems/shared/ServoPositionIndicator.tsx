@@ -113,7 +113,7 @@ const ServoPositionIndicator: React.FC<ServoPositionIndicatorProps> = ({
           />
           
           {/* Tick marks */}
-          {[0, 45, 90, 135, 180].map((angle) => {
+          {Array.from({ length: Math.floor(maxDegrees / 45) + 1 }, (_, i) => i * 45).map((angle) => {
             if (angle > maxDegrees) return null;
             const tickAngle = (angle - maxDegrees / 2) * (Math.PI / 180);
             const tickStartRadius = radius - 5;
