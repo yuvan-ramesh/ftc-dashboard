@@ -28,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
   ];
 
   return (
-    <div className="w-64 bg-gray-900 text-white h-full flex flex-col">
+    <div className="w-64 bg-gray-900 text-white min-h-full flex flex-col">
       <div className="p-4 border-b border-gray-700">
         <h2 className="text-xl font-bold">FTC Dashboard</h2>
       </div>

@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import Sidebar, { DashboardSection } from './Sidebar';
+import { DashboardSection } from './Sidebar';
+import TabNavigation from './TabNavigation';
 import GeneralDashboardBar from '@/components/views/GeneralDashboardBar';
 import DrivetrainView from '@/components/subsystems/Drivetrain/DrivetrainView';
 import IntakeView from '@/components/subsystems/Intake/IntakeView';
 import CameraView from '@/components/views/CameraView';
 import DepositView from '@/components/subsystems/Deposit/DepositView';
 import EnhancedTelemetryView from '@/components/views/EnhancedTelemetryView';
+import NavigationInstructions from './NavigationInstructions';
 
-interface DashboardLayoutProps {
+interface DashboardLayoutTabsProps {
   // Redux state props will be added here
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
+const DashboardLayoutTabs: React.FC<DashboardLayoutTabsProps> = () => {
   const [activeSection, setActiveSection] = useState<DashboardSection>(DashboardSection.DRIVETRAIN);
 
   const renderContent = () => {
@@ -33,17 +35,20 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
   };
 
   return (
-    <div className="flex h-full bg-gray-100">
-      <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
+    <div className="flex flex-col h-full bg-gray-900">
+      {/* General Dashboard Bar - Always visible at the top */}
+      <GeneralDashboardBar />
       
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* General Dashboard Bar - Always visible at the top */}
-        <GeneralDashboardBar />
-        
-        {/* Main Content Area */}
-        <div className="flex-1 overflow-auto p-6 bg-gray-50 dark:bg-gray-900">
-          {renderContent()}
-        </div>
+      {/* Tab Navigation */}
+      <TabNavigation activeSection={activeSection} onSectionChange={setActiveSection} />
+      
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-auto p-6">
+        {/* Show instructions on first load */}
+        {activeSection === DashboardSection.DRIVETRAIN && (
+          <NavigationInstructions />
+        )}
+        {renderContent()}
       </div>
     </div>
   );
@@ -53,4 +58,4 @@ const mapStateToProps = (state: any) => ({
   // Map relevant state here
 });
 
-export default connect(mapStateToProps)(DashboardLayout);
+export default connect(mapStateToProps)(DashboardLayoutTabs);
