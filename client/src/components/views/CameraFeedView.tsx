@@ -83,29 +83,69 @@ const CameraFeedView: React.FC<CameraFeedViewProps> = ({ isUnlocked, isDraggable
           <div className="bg-gray-800 rounded-lg p-4">
             <h3 className="text-white text-lg font-medium mb-4">Detected Objects</h3>
             
-            {/* Detection Summary */}
-            {cameraState.detectedObjects.length > 0 && (
-              <div className="mb-4 p-3 bg-gray-700 rounded-lg">
-                <div className="text-sm space-y-1">
+            {/* Detection Summary with Color Indicator */}
+            <div className="mb-4 p-3 bg-gray-700 rounded-lg">
+              <div className="flex items-center gap-4">
+                {/* Color Detection Circle */}
+                <div className="flex flex-col items-center">
+                  <div
+                    className="w-16 h-16 rounded-full border-4 border-gray-600 shadow-lg transition-all duration-300"
+                    style={{
+                      backgroundColor: cameraState.detectedObjects.length > 0
+                        ? (() => {
+                            // Get the most common color or the first detected color
+                            const colors = cameraState.detectedObjects.map(obj => {
+                              const color = obj.color.toLowerCase();
+                              if (color.includes('blue')) return '#3B82F6';
+                              if (color.includes('red')) return '#EF4444';
+                              if (color.includes('yellow')) return '#F59E0B';
+                              return '#6B7280';
+                            });
+                            // Return the first detected color
+                            return colors[0] || '#6B7280';
+                          })()
+                        : '#6B7280',
+                      boxShadow: cameraState.detectedObjects.length > 0
+                        ? '0 0 20px rgba(255, 255, 255, 0.3)'
+                        : 'none'
+                    }}
+                  />
+                  <span className="text-xs text-gray-400 mt-1">
+                    {cameraState.detectedObjects.length > 0 ? 'Detected' : 'No Detection'}
+                  </span>
+                </div>
+                
+                {/* Detection Stats */}
+                <div className="flex-1 text-sm space-y-1">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Total Objects:</span>
-                    <span className="text-white font-bold">{cameraState.detectedObjects.length}</span>
+                    <span className="text-white font-bold text-lg">{cameraState.detectedObjects.length}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Colors Detected:</span>
-                    <span className="text-white">
-                      {Array.from(new Set(cameraState.detectedObjects.map(obj => {
-                        const color = obj.color.toLowerCase();
-                        if (color.includes('blue')) return 'Blue';
-                        if (color.includes('red')) return 'Red';
-                        if (color.includes('yellow')) return 'Yellow';
-                        return 'Other';
-                      }))).join(', ')}
+                    <span className="text-gray-400">Status:</span>
+                    <span className={`font-medium ${
+                      cameraState.detectedObjects.length > 0 ? 'text-green-400' : 'text-gray-500'
+                    }`}>
+                      {cameraState.detectedObjects.length > 0 ? 'Objects Detected' : 'No Objects Detected'}
                     </span>
                   </div>
+                  {cameraState.detectedObjects.length > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Colors:</span>
+                      <span className="text-white">
+                        {Array.from(new Set(cameraState.detectedObjects.map(obj => {
+                          const color = obj.color.toLowerCase();
+                          if (color.includes('blue')) return 'Blue';
+                          if (color.includes('red')) return 'Red';
+                          if (color.includes('yellow')) return 'Yellow';
+                          return 'Other';
+                        }))).join(', ')}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
             
             {cameraState.detectedObjects.length > 0 ? (
               <div className="space-y-2 max-h-96 overflow-y-auto">

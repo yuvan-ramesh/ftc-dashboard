@@ -168,7 +168,7 @@ function drawPositionTrail(
 ) {
   if (positionHistory.length < 2) return;
   
-  ctx.strokeStyle = 'rgba(156, 163, 175, 0.3)'; // Gray trail for history
+  ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)'; // Yellow trail for history
   ctx.lineWidth = 1;
   ctx.beginPath();
   

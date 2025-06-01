@@ -23,7 +23,7 @@ const TelemetryInfoPanel: React.FC = () => {
             <span className="text-sm text-gray-400">Actual Path</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5 bg-gray-400"></div>
+            <div className="w-4 h-0.5 bg-yellow-500"></div>
             <span className="text-sm text-gray-400">Position History</span>
           </div>
         </div>
