@@ -7,6 +7,7 @@ import EncoderValues from './EncoderValues';
 import CenterOfGravityIndicator from './CenterOfGravityIndicator';
 import PIDGraph from '../shared/PIDGraph';
 import SensorValueDisplay from '../shared/SensorValueDisplay';
+import EnhancedFieldView from '@/components/views/FieldView/EnhancedFieldView';
 
 const DrivetrainView: React.FC = () => {
   const drivetrain = useSelector((state: RootState) => state.subsystems.drivetrain);
@@ -51,6 +52,11 @@ const DrivetrainView: React.FC = () => {
             title="Additional Sensors"
             columns={3}
           />
+        </div>
+        
+        {/* Field Overlay - Full width */}
+        <div className="lg:col-span-3">
+          <EnhancedFieldView />
         </div>
         
         {/* PID Graph */}

@@ -13,6 +13,7 @@ import FieldView from '@/components/views/FieldView/FieldView';
 import GeneralDashboard from '@/components/views/GeneralDashboard';
 import EnhancedTelemetryView from '@/components/views/EnhancedTelemetryView';
 import DrivetrainView from '@/components/subsystems/Drivetrain/DrivetrainView';
+import DashboardLayout from '@/components/DashboardLayout/DashboardLayout';
 
 const LayoutPreset = {
   DEFAULT: 'DEFAULT',
@@ -21,6 +22,7 @@ const LayoutPreset = {
   ORIGINAL: 'ORIGINAL',
   ENHANCED: 'ENHANCED',
   CONFIGURABLE: 'CONFIGURABLE',
+  SYSTEMS_DASHBOARD: 'SYSTEMS_DASHBOARD',
 } as const;
 
 type Layout = {
@@ -130,6 +132,10 @@ const LAYOUT_DETAILS: { [key in Values<typeof LayoutPreset>]: Layout } = {
   [LayoutPreset.CONFIGURABLE]: {
     name: 'Custom',
     content: <ConfigurableLayout />,
+  },
+  [LayoutPreset.SYSTEMS_DASHBOARD]: {
+    name: 'Systems Dashboard',
+    content: <DashboardLayout />,
   },
 };
 
