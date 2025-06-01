@@ -58,7 +58,7 @@ const DrivetrainView: React.FC = () => {
       </div>
       
       {/* Field Map - Full width separate section for more space */}
-      <div className="mt-6" style={{ minHeight: '650px' }}>
+      <div className="mt-6 mb-6">
         <FieldMapView />
       </div>
       

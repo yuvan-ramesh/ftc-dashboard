@@ -44,7 +44,7 @@ const EnhancedFieldOverlay: React.FC<EnhancedFieldOverlayProps> = ({
       
       // Draw planned path (blue) - only in auto mode
       if (status.activeOpModeStatus === 'RUNNING' && drivetrain.plannedPath?.length > 0) {
-        drawPath(ctx, drivetrain.plannedPath, 'rgba(59, 130, 246, 0.6)', 3, true); // Blue for planned
+        drawPath(ctx, drivetrain.plannedPath, 'rgba(59, 130, 246, 0.8)', 3, false); // Blue for planned
       }
       
       // Update and draw actual path (green)
@@ -141,9 +141,6 @@ function drawPath(
   
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
-  if (isDashed) {
-    ctx.setLineDash([5, 5]);
-  }
   
   ctx.beginPath();
   path.forEach((point, index) => {
@@ -155,19 +152,15 @@ function drawPath(
   });
   ctx.stroke();
   
-  ctx.setLineDash([]); // Reset dash
-  
-  // Draw waypoints for planned path
-  if (isDashed) {
-    ctx.fillStyle = color;
-    path.forEach((point, index) => {
-      if (index % 5 === 0 || index === path.length - 1) { // Every 5th point or last point
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    });
-  }
+  // Draw waypoints for paths
+  ctx.fillStyle = color;
+  path.forEach((point, index) => {
+    if (index % 10 === 0 || index === path.length - 1) { // Every 10th point or last point
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
 }
 
 function drawPositionTrail(
@@ -301,33 +294,6 @@ function drawTelemetryOverlay(
   ctx.fillText(`θ: ${(drivetrain.heading * 180 / Math.PI).toFixed(1)}°`, 20, 60);
   ctx.fillText(`COG: (${drivetrain.centerOfGravity.x.toFixed(1)}, ${drivetrain.centerOfGravity.y.toFixed(1)})`, 20, 80);
   
-  // Path legend
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(10, height - 80, 150, 70);
-  
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = '12px sans-serif';
-  ctx.fillText('Path Legend:', 20, height - 65);
-  
-  // Blue line for planned
-  ctx.strokeStyle = 'rgba(59, 130, 246, 0.8)';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([5, 5]);
-  ctx.beginPath();
-  ctx.moveTo(20, height - 45);
-  ctx.lineTo(50, height - 45);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillText('Planned', 55, height - 42);
-  
-  // Green line for actual
-  ctx.strokeStyle = 'rgba(34, 197, 94, 0.8)';
-  ctx.beginPath();
-  ctx.moveTo(20, height - 25);
-  ctx.lineTo(50, height - 25);
-  ctx.stroke();
-  ctx.fillText('Actual', 55, height - 22);
   
   // Velocity info
   const velocity = drivetrain.velocity;
