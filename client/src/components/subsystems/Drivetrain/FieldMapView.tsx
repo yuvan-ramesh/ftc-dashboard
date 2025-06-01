@@ -80,19 +80,19 @@ const FieldMapView: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [canvasSize, setCanvasSize] = useState({ width: 600, height: 600 });
+  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 800 });
   
   useEffect(() => {
     const updateSize = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
         // Calculate available space accounting for the side panel
-        const availableWidth = rect.width - 280; // Account for padding and side panel
-        const availableHeight = window.innerHeight - 400; // Leave room for other UI elements
+        const availableWidth = rect.width - 300; // Account for padding and side panel (reduced from 280)
+        const availableHeight = window.innerHeight - 250; // Leave less room for other UI elements (reduced from 400)
         
         // Use the smaller dimension to maintain square aspect ratio
-        const size = Math.min(availableWidth, availableHeight, 700); // Max 700px
-        const finalSize = Math.max(400, size); // Minimum 400px
+        const size = Math.min(availableWidth, availableHeight, 1000); // Increased max from 700px to 1000px
+        const finalSize = Math.max(500, size); // Increased minimum from 400px to 500px
         
         setCanvasSize({ width: finalSize, height: finalSize });
       }
@@ -117,12 +117,12 @@ const FieldMapView: React.FC = () => {
   }, [canvasSize]);
   
   return (
-    <div ref={containerRef} className="bg-gray-800 rounded-lg p-4">
-      <h3 className="text-white text-lg font-medium mb-4">Field Map</h3>
+    <div ref={containerRef} className="bg-gray-800 rounded-lg p-3">
+      <h3 className="text-white text-lg font-medium mb-2">Field Map</h3>
       
-      <div className="flex gap-4" style={{ minHeight: '600px' }}>
+      <div className="flex gap-3">
         {/* Field Container */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 flex justify-center items-center">
           <div className="relative" style={{ width: canvasSize.width, height: canvasSize.height }}>
             {/* Base field canvas */}
             <canvas
