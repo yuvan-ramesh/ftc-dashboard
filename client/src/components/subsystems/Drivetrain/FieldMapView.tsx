@@ -117,7 +117,11 @@ const FieldMapView: React.FC = () => {
               width={canvasSize.width}
               height={canvasSize.height}
               className="bg-gray-900 rounded"
-              style={{ width: '100%', height: '100%' }}
+              style={{ 
+                width: `${canvasSize.width}px`, 
+                height: `${canvasSize.height}px`,
+                imageRendering: 'crisp-edges'
+              }}
             />
         
             {/* Enhanced overlay canvas */}
@@ -126,7 +130,11 @@ const FieldMapView: React.FC = () => {
               width={canvasSize.width}
               height={canvasSize.height}
               className="absolute top-0 left-0 pointer-events-none"
-              style={{ width: '100%', height: '100%' }}
+              style={{ 
+                width: `${canvasSize.width}px`, 
+                height: `${canvasSize.height}px`,
+                imageRendering: 'crisp-edges'
+              }}
             />
             
             {/* Enhanced field overlay component */}

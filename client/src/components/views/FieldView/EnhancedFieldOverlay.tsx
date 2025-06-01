@@ -44,7 +44,7 @@ const EnhancedFieldOverlay: React.FC<EnhancedFieldOverlayProps> = ({
       
       // Draw planned path (blue) - only in auto mode
       if (status.activeOpModeStatus === 'RUNNING' && drivetrain.plannedPath?.length > 0) {
-        drawPath(ctx, drivetrain.plannedPath, 'rgba(59, 130, 246, 0.8)', 3, false); // Blue for planned
+        drawPath(ctx, drivetrain.plannedPath, 'rgba(59, 130, 246, 0.9)', 3, false); // Blue for planned
       }
       
       // Update and draw actual path (green)
@@ -64,7 +64,7 @@ const EnhancedFieldOverlay: React.FC<EnhancedFieldOverlayProps> = ({
       }
       
       if (actualPathRef.current.length > 1) {
-        drawPath(ctx, actualPathRef.current, 'rgba(34, 197, 94, 0.8)', 2, false); // Green for actual
+        drawPath(ctx, actualPathRef.current, 'rgba(34, 197, 94, 0.9)', 3, false); // Green for actual
       }
       
       // Draw position history trail (lighter trail)
@@ -95,8 +95,8 @@ const EnhancedFieldOverlay: React.FC<EnhancedFieldOverlayProps> = ({
 };
 
 function drawFieldGrid(ctx: CanvasRenderingContext2D) {
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-  ctx.lineWidth = 0.5;
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+  ctx.lineWidth = 1;
   
   // Draw grid lines every 12 inches
   for (let x = -72; x <= 72; x += 12) {
@@ -168,8 +168,8 @@ function drawPositionTrail(
 ) {
   if (positionHistory.length < 2) return;
   
-  ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)'; // Yellow trail for history
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)'; // Yellow trail for history
+  ctx.lineWidth = 2;
   ctx.beginPath();
   
   positionHistory.forEach((entry, index) => {
@@ -250,15 +250,15 @@ function drawCoordinateLabels(
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   
-  // X-axis labels
-  for (let x = -60; x <= 60; x += 60) {
+  // X-axis labels (showing -72 to 72)
+  for (let x = -72; x <= 72; x += 36) {
     const screenX = width / 2 + x * scale;
     ctx.fillText(`${x}"`, screenX, height - 10);
   }
   
-  // Y-axis labels
+  // Y-axis labels (showing -72 to 72)
   ctx.textAlign = 'right';
-  for (let y = -60; y <= 60; y += 60) {
+  for (let y = -72; y <= 72; y += 36) {
     const screenY = height / 2 - y * scale;
     ctx.fillText(`${y}"`, 30, screenY);
   }
