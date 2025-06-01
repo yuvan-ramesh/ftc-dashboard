@@ -49,6 +49,10 @@ export interface DrivetrainState {
     position: Vector3;
     timestamp: number;
   }>;
+  plannedPath?: Array<{
+    x: number;
+    y: number;
+  }>;
 }
 
 // Intake Types
@@ -58,7 +62,13 @@ export interface IntakeState {
   slideMin: number;
   slideMax: number;
   hasSample: boolean;
-  servoPosition: number;
+  servoPosition: number; // Primary servo for backward compatibility
+  servos: {
+    claw: number;
+    wrist: number;
+    arm: number;
+    rotation: number;
+  };
   state: 'IDLE' | 'EXTENDING' | 'RETRACTING' | 'GRABBING' | 'RELEASING';
   sensors: SensorData[];
   pidData?: PIDData;
@@ -71,6 +81,13 @@ export interface DepositState {
   slideMin: number;
   slideMax: number;
   isDeposited: boolean;
+  servoPosition: number; // Primary servo for backward compatibility
+  servos: {
+    bucket: number;
+    arm: number;
+    wrist: number;
+    rotation: number;
+  };
   state: 'IDLE' | 'EXTENDING' | 'RETRACTING' | 'DEPOSITING' | 'RESETTING';
   sensors: SensorData[];
   pidData?: PIDData;

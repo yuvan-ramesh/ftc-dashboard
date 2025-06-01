@@ -5,7 +5,7 @@ import TabNavigation from './TabNavigation';
 import GeneralDashboardBar from '@/components/views/GeneralDashboardBar';
 import DrivetrainView from '@/components/subsystems/Drivetrain/DrivetrainView';
 import IntakeView from '@/components/subsystems/Intake/IntakeView';
-import CameraView from '@/components/views/CameraView';
+import CameraFeedView from '@/components/views/CameraFeedView';
 import DepositView from '@/components/subsystems/Deposit/DepositView';
 import EnhancedTelemetryView from '@/components/views/EnhancedTelemetryView';
 import NavigationInstructions from './NavigationInstructions';
@@ -24,7 +24,7 @@ const DashboardLayoutTabs: React.FC<DashboardLayoutTabsProps> = () => {
       case DashboardSection.INTAKE:
         return <IntakeView />;
       case DashboardSection.CAMERA:
-        return <CameraView isUnlocked={true} isDraggable={false} />;
+        return <CameraFeedView isUnlocked={true} isDraggable={false} />;
       case DashboardSection.DEPOSIT:
         return <DepositView />;
       case DashboardSection.TELEMETRY:

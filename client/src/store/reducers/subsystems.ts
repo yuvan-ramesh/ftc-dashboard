@@ -35,6 +35,12 @@ const initialIntakeState: IntakeState = {
   slideMax: 100,
   hasSample: false,
   servoPosition: 0,
+  servos: {
+    claw: 0,
+    wrist: 90,
+    arm: 45,
+    rotation: 180,
+  },
   state: 'IDLE',
   sensors: [],
 };
@@ -45,6 +51,13 @@ const initialDepositState: DepositState = {
   slideMin: 0,
   slideMax: 100,
   isDeposited: false,
+  servoPosition: 0,
+  servos: {
+    bucket: 0,
+    arm: 90,
+    wrist: 45,
+    rotation: 180,
+  },
   state: 'IDLE',
   sensors: [],
 };

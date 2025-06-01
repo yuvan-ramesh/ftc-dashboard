@@ -7,7 +7,8 @@ import EncoderValues from './EncoderValues';
 import CenterOfGravityIndicator from './CenterOfGravityIndicator';
 import PIDGraph from '../shared/PIDGraph';
 import SensorValueDisplay from '../shared/SensorValueDisplay';
-import EnhancedFieldView from '@/components/views/FieldView/EnhancedFieldView';
+import FieldMapView from './FieldMapView';
+import SubsystemTelemetry from '../shared/SubsystemTelemetry';
 
 const DrivetrainView: React.FC = () => {
   const drivetrain = useSelector((state: RootState) => state.subsystems.drivetrain);
@@ -54,21 +55,31 @@ const DrivetrainView: React.FC = () => {
           />
         </div>
         
-        {/* Field Overlay - Full width */}
-        <div className="lg:col-span-3">
-          <EnhancedFieldView />
-        </div>
+      </div>
+      
+      {/* Field Map - Full width separate section for more space */}
+      <div className="mt-6" style={{ minHeight: '650px' }}>
+        <FieldMapView />
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mt-6">
         
         {/* PID Graph */}
-        {drivetrain.pidData && (
-          <div className="lg:col-span-3">
-            <PIDGraph
-              subsystem="drivetrain"
-              title="Drivetrain PID Performance"
-              height={350}
-            />
-          </div>
-        )}
+        <div className="lg:col-span-3">
+          <PIDGraph
+            subsystem="drivetrain"
+            title="Drivetrain PID Performance"
+            height={350}
+          />
+        </div>
+        
+        {/* Telemetry Section */}
+        <div className="lg:col-span-3">
+          <SubsystemTelemetry
+            subsystemId="drivetrain"
+            subsystemName="Drivetrain"
+          />
+        </div>
       </div>
     </div>
   );

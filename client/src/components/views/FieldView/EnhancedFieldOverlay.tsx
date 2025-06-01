@@ -14,7 +14,10 @@ const EnhancedFieldOverlay: React.FC<EnhancedFieldOverlayProps> = ({
   height,
 }) => {
   const drivetrain = useSelector((state: RootState) => state.subsystems.drivetrain);
+  const status = useSelector((state: RootState) => state.status);
   const animationFrameRef = useRef<number>();
+  const actualPathRef = useRef<Array<{ x: number; y: number; timestamp: number }>>([]);
+  const plannedPathRef = useRef<Array<{ x: number; y: number }>>([]);
   
   // Field dimensions in inches (FTC standard field is 144" x 144")
   const FIELD_SIZE = 144;
@@ -39,7 +42,32 @@ const EnhancedFieldOverlay: React.FC<EnhancedFieldOverlayProps> = ({
       // Draw field grid
       drawFieldGrid(ctx);
       
-      // Draw position history trail
+      // Draw planned path (blue) - only in auto mode
+      if (status.activeOpModeStatus === 'RUNNING' && drivetrain.plannedPath?.length > 0) {
+        drawPath(ctx, drivetrain.plannedPath, 'rgba(59, 130, 246, 0.6)', 3, true); // Blue for planned
+      }
+      
+      // Update and draw actual path (green)
+      if (status.activeOpModeStatus === 'RUNNING') {
+        actualPathRef.current.push({
+          x: drivetrain.position.x,
+          y: drivetrain.position.y,
+          timestamp: Date.now()
+        });
+        // Keep only last 1000 points
+        if (actualPathRef.current.length > 1000) {
+          actualPathRef.current = actualPathRef.current.slice(-1000);
+        }
+      } else if (status.activeOpModeStatus === 'STOPPED') {
+        // Clear paths when OpMode stops
+        actualPathRef.current = [];
+      }
+      
+      if (actualPathRef.current.length > 1) {
+        drawPath(ctx, actualPathRef.current, 'rgba(34, 197, 94, 0.8)', 2, false); // Green for actual
+      }
+      
+      // Draw position history trail (lighter trail)
       drawPositionTrail(ctx, drivetrain.positionHistory);
       
       // Draw robot
@@ -102,14 +130,54 @@ function drawFieldGrid(ctx: CanvasRenderingContext2D) {
   ctx.stroke();
 }
 
+function drawPath(
+  ctx: CanvasRenderingContext2D,
+  path: Array<{ x: number; y: number }>,
+  color: string,
+  lineWidth: number,
+  isDashed: boolean
+) {
+  if (path.length < 2) return;
+  
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  if (isDashed) {
+    ctx.setLineDash([5, 5]);
+  }
+  
+  ctx.beginPath();
+  path.forEach((point, index) => {
+    if (index === 0) {
+      ctx.moveTo(point.x, point.y);
+    } else {
+      ctx.lineTo(point.x, point.y);
+    }
+  });
+  ctx.stroke();
+  
+  ctx.setLineDash([]); // Reset dash
+  
+  // Draw waypoints for planned path
+  if (isDashed) {
+    ctx.fillStyle = color;
+    path.forEach((point, index) => {
+      if (index % 5 === 0 || index === path.length - 1) { // Every 5th point or last point
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+  }
+}
+
 function drawPositionTrail(
   ctx: CanvasRenderingContext2D,
   positionHistory: Array<{ position: { x: number; y: number; z: number }; timestamp: number }>
 ) {
   if (positionHistory.length < 2) return;
   
-  ctx.strokeStyle = 'rgba(59, 130, 246, 0.4)'; // Blue trail
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(156, 163, 175, 0.3)'; // Gray trail for history
+  ctx.lineWidth = 1;
   ctx.beginPath();
   
   positionHistory.forEach((entry, index) => {
@@ -121,15 +189,6 @@ function drawPositionTrail(
   });
   
   ctx.stroke();
-  
-  // Draw dots at each position
-  ctx.fillStyle = 'rgba(59, 130, 246, 0.6)';
-  positionHistory.forEach((entry, index) => {
-    const radius = index === positionHistory.length - 1 ? 3 : 1;
-    ctx.beginPath();
-    ctx.arc(entry.position.x, entry.position.y, radius, 0, Math.PI * 2);
-    ctx.fill();
-  });
 }
 
 function drawRobot(
@@ -241,6 +300,34 @@ function drawTelemetryOverlay(
   ctx.fillText(`Y: ${drivetrain.position.y.toFixed(1)}"`, 20, 40);
   ctx.fillText(`θ: ${(drivetrain.heading * 180 / Math.PI).toFixed(1)}°`, 20, 60);
   ctx.fillText(`COG: (${drivetrain.centerOfGravity.x.toFixed(1)}, ${drivetrain.centerOfGravity.y.toFixed(1)})`, 20, 80);
+  
+  // Path legend
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(10, height - 80, 150, 70);
+  
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '12px sans-serif';
+  ctx.fillText('Path Legend:', 20, height - 65);
+  
+  // Blue line for planned
+  ctx.strokeStyle = 'rgba(59, 130, 246, 0.8)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([5, 5]);
+  ctx.beginPath();
+  ctx.moveTo(20, height - 45);
+  ctx.lineTo(50, height - 45);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillText('Planned', 55, height - 42);
+  
+  // Green line for actual
+  ctx.strokeStyle = 'rgba(34, 197, 94, 0.8)';
+  ctx.beginPath();
+  ctx.moveTo(20, height - 25);
+  ctx.lineTo(50, height - 25);
+  ctx.stroke();
+  ctx.fillText('Actual', 55, height - 22);
   
   // Velocity info
   const velocity = drivetrain.velocity;

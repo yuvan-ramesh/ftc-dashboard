@@ -9,6 +9,7 @@ import { ReactComponent as RecordIcon } from '@/assets/icons/create.svg';
 import { ReactComponent as RefreshIcon } from '@/assets/icons/refresh.svg';
 import { ReactComponent as DownloadIcon } from '@/assets/icons/file_download.svg';
 import TelemetryGraphManager from './TelemetryGraphManager';
+import PIDGraph from '@/components/subsystems/shared/PIDGraph';
 
 interface TelemetryRecording {
   startTime: number;
@@ -322,6 +323,25 @@ const EnhancedTelemetryView: React.FC = () => {
             </div>
           );
         })}
+      </div>
+      
+      {/* PID Graphs for all subsystems */}
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <PIDGraph
+          subsystem="drivetrain"
+          title="Drivetrain PID"
+          height={250}
+        />
+        <PIDGraph
+          subsystem="intake"
+          title="Intake PID"
+          height={250}
+        />
+        <PIDGraph
+          subsystem="deposit"
+          title="Deposit PID"
+          height={250}
+        />
       </div>
       
       {/* Telemetry Graph Manager */}

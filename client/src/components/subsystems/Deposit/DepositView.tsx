@@ -6,6 +6,8 @@ import SliderControl from '../shared/SliderControl';
 import PIDGraph from '../shared/PIDGraph';
 import SensorValueDisplay from '../shared/SensorValueDisplay';
 import DepositStateDisplay from './DepositStateDisplay';
+import ServoPositionIndicator from '../shared/ServoPositionIndicator';
+import SubsystemTelemetry from '../shared/SubsystemTelemetry';
 
 const DepositView: React.FC = () => {
   const deposit = useSelector((state: RootState) => state.subsystems.deposit);
@@ -43,6 +45,7 @@ const DepositView: React.FC = () => {
             slideTarget={deposit.slideTarget}
           />
         </div>
+        
         
         {/* Deposit Status Indicator */}
         <div className="lg:col-span-1">
@@ -85,6 +88,43 @@ const DepositView: React.FC = () => {
           </div>
         </div>
         
+        {/* Multiple Servo Indicators */}
+        <div className="lg:col-span-3">
+          <div className="bg-gray-800 rounded-lg p-4">
+            <h3 className="text-white text-lg font-medium mb-4">Servo Positions</h3>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <ServoPositionIndicator
+                position={deposit.servos?.bucket || deposit.servoPosition || 0}
+                maxDegrees={360}
+                label="Bucket Servo"
+                size={120}
+                color="#10B981"
+              />
+              <ServoPositionIndicator
+                position={deposit.servos?.arm || 90}
+                maxDegrees={360}
+                label="Arm Servo"
+                size={120}
+                color="#8B5CF6"
+              />
+              <ServoPositionIndicator
+                position={deposit.servos?.wrist || 45}
+                maxDegrees={360}
+                label="Wrist Servo"
+                size={120}
+                color="#EC4899"
+              />
+              <ServoPositionIndicator
+                position={deposit.servos?.rotation || 180}
+                maxDegrees={360}
+                label="Rotation Servo"
+                size={120}
+                color="#06B6D4"
+              />
+            </div>
+          </div>
+        </div>
+        
         {/* Sensor Values */}
         {deposit.sensors.length > 0 && (
           <div className="lg:col-span-2 xl:col-span-3">
@@ -97,15 +137,21 @@ const DepositView: React.FC = () => {
         )}
         
         {/* PID Graph */}
-        {deposit.pidData && (
-          <div className="lg:col-span-2 xl:col-span-3">
-            <PIDGraph
-              subsystem="deposit"
-              title="Deposit Slide PID Performance"
-              height={300}
-            />
-          </div>
-        )}
+        <div className="lg:col-span-2 xl:col-span-3">
+          <PIDGraph
+            subsystem="deposit"
+            title="Deposit Slide PID Performance"
+            height={300}
+          />
+        </div>
+        
+        {/* Telemetry Section */}
+        <div className="lg:col-span-2 xl:col-span-3">
+          <SubsystemTelemetry
+            subsystemId="deposit"
+            subsystemName="Deposit"
+          />
+        </div>
       </div>
     </div>
   );
