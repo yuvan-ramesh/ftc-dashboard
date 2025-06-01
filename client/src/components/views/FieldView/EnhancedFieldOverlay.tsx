@@ -77,8 +77,6 @@ const EnhancedFieldOverlay: React.FC<EnhancedFieldOverlayProps> = ({
       ctx.restore();
       drawCoordinateLabels(ctx, width, height, scale);
       
-      // Telemetry overlay removed - now displayed in side panel
-      
       animationFrameRef.current = requestAnimationFrame(render);
     };
     
@@ -89,13 +87,13 @@ const EnhancedFieldOverlay: React.FC<EnhancedFieldOverlayProps> = ({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [drivetrain, width, height, scale]);
+  }, [drivetrain, width, height, scale, status]);
   
   return null; // This component only manages the canvas drawing
 };
 
 function drawFieldGrid(ctx: CanvasRenderingContext2D) {
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
   ctx.lineWidth = 1;
   
   // Draw grid lines every 12 inches
@@ -245,8 +243,8 @@ function drawCoordinateLabels(
   height: number,
   scale: number
 ) {
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-  ctx.font = '12px monospace';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+  ctx.font = '14px monospace';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   

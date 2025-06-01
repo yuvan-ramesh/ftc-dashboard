@@ -80,19 +80,19 @@ const FieldMapView: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 800 });
+  const [canvasSize, setCanvasSize] = useState({ width: 600, height: 600 });
   
   useEffect(() => {
     const updateSize = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
         // Calculate available space accounting for the side panel
-        const availableWidth = rect.width - 280; // Account for padding and side panel (64px padding + 256px panel width)
+        const availableWidth = rect.width - 280; // Account for padding and side panel
         const availableHeight = window.innerHeight - 400; // Leave room for other UI elements
         
         // Use the smaller dimension to maintain square aspect ratio
-        const size = Math.min(availableWidth, availableHeight, 800); // Max 800px
-        const finalSize = Math.max(500, size); // Minimum 500px
+        const size = Math.min(availableWidth, availableHeight, 700); // Max 700px
+        const finalSize = Math.max(400, size); // Minimum 400px
         
         setCanvasSize({ width: finalSize, height: finalSize });
       }
@@ -102,6 +102,19 @@ const FieldMapView: React.FC = () => {
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
   }, []);
+  
+  // Draw the base field
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Fill background
+    ctx.fillStyle = '#111827'; // Dark gray background
+    ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
+  }, [canvasSize]);
   
   return (
     <div ref={containerRef} className="bg-gray-800 rounded-lg p-4">
@@ -119,8 +132,7 @@ const FieldMapView: React.FC = () => {
               className="bg-gray-900 rounded"
               style={{ 
                 width: `${canvasSize.width}px`, 
-                height: `${canvasSize.height}px`,
-                imageRendering: 'crisp-edges'
+                height: `${canvasSize.height}px`
               }}
             />
         
@@ -132,8 +144,7 @@ const FieldMapView: React.FC = () => {
               className="absolute top-0 left-0 pointer-events-none"
               style={{ 
                 width: `${canvasSize.width}px`, 
-                height: `${canvasSize.height}px`,
-                imageRendering: 'crisp-edges'
+                height: `${canvasSize.height}px`
               }}
             />
             
