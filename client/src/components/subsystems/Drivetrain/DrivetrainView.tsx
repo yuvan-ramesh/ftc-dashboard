@@ -14,9 +14,15 @@ const DrivetrainView: React.FC = () => {
   const drivetrain = useSelector((state: RootState) => state.subsystems.drivetrain);
   
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-6">
       <h2 className="text-2xl font-bold text-white mb-4">Drivetrain System</h2>
       
+      {/* Field Map - First thing shown */}
+      <div className="mb-6">
+        <FieldMapView />
+      </div>
+      
+      {/* Other drivetrain components */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {/* Position and Heading */}
         <div className="lg:col-span-1">
@@ -54,12 +60,6 @@ const DrivetrainView: React.FC = () => {
             columns={3}
           />
         </div>
-        
-      </div>
-      
-      {/* Field Map - Full width separate section for more space */}
-      <div className="mt-6 mb-6">
-        <FieldMapView />
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mt-6">

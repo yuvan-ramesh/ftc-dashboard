@@ -83,6 +83,30 @@ const CameraFeedView: React.FC<CameraFeedViewProps> = ({ isUnlocked, isDraggable
           <div className="bg-gray-800 rounded-lg p-4">
             <h3 className="text-white text-lg font-medium mb-4">Detected Objects</h3>
             
+            {/* Detection Summary */}
+            {cameraState.detectedObjects.length > 0 && (
+              <div className="mb-4 p-3 bg-gray-700 rounded-lg">
+                <div className="text-sm space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Total Objects:</span>
+                    <span className="text-white font-bold">{cameraState.detectedObjects.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Colors Detected:</span>
+                    <span className="text-white">
+                      {Array.from(new Set(cameraState.detectedObjects.map(obj => {
+                        const color = obj.color.toLowerCase();
+                        if (color.includes('blue')) return 'Blue';
+                        if (color.includes('red')) return 'Red';
+                        if (color.includes('yellow')) return 'Yellow';
+                        return 'Other';
+                      }))).join(', ')}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {cameraState.detectedObjects.length > 0 ? (
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {cameraState.detectedObjects.map((obj) => (
@@ -135,19 +159,19 @@ const CameraFeedView: React.FC<CameraFeedViewProps> = ({ isUnlocked, isDraggable
             
             {/* Detection Legend */}
             <div className="mt-4 p-3 bg-gray-700 rounded-lg">
-              <div className="text-sm text-gray-400 mb-2">Object Types:</div>
+              <div className="text-sm text-gray-400 mb-2">Object Colors:</div>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded bg-blue-500"></div>
-                  <span className="text-gray-300">Blue Sample</span>
+                  <span className="text-gray-300">Blue</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded bg-red-500"></div>
-                  <span className="text-gray-300">Red Sample</span>
+                  <span className="text-gray-300">Red</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded bg-yellow-500"></div>
-                  <span className="text-gray-300">Yellow Sample</span>
+                  <span className="text-gray-300">Yellow</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded bg-gray-400"></div>

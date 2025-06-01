@@ -10,6 +10,25 @@ const TelemetryInfoPanel: React.FC = () => {
   
   return (
     <div className="w-64 space-y-4">
+      {/* Path Legend */}
+      <div className="bg-gray-900 rounded-lg p-4">
+        <h4 className="text-white font-medium mb-3">Path Legend</h4>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-0.5 bg-blue-500"></div>
+            <span className="text-sm text-gray-400">Planned Path</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-0.5 bg-green-500"></div>
+            <span className="text-sm text-gray-400">Actual Path</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-0.5 bg-gray-400"></div>
+            <span className="text-sm text-gray-400">Position History</span>
+          </div>
+        </div>
+      </div>
+      
       {/* Position Info */}
       <div className="bg-gray-900 rounded-lg p-4">
         <h4 className="text-white font-medium mb-3">Position</h4>
@@ -67,8 +86,8 @@ const FieldMapView: React.FC = () => {
     const updateSize = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        // Calculate available space
-        const availableWidth = rect.width - 64; // Account for padding
+        // Calculate available space accounting for the side panel
+        const availableWidth = rect.width - 280; // Account for padding and side panel (64px padding + 256px panel width)
         const availableHeight = window.innerHeight - 400; // Leave room for other UI elements
         
         // Use the smaller dimension to maintain square aspect ratio
@@ -101,43 +120,28 @@ const FieldMapView: React.FC = () => {
               style={{ width: '100%', height: '100%' }}
             />
         
-          {/* Enhanced overlay canvas */}
-          <canvas
-            ref={overlayCanvasRef}
-            width={canvasSize.width}
-            height={canvasSize.height}
-            className="absolute top-0 left-0 pointer-events-none"
-            style={{ width: '100%', height: '100%' }}
-          />
-          
-          {/* Enhanced field overlay component */}
-          <EnhancedFieldOverlay
-            canvasRef={overlayCanvasRef}
-            width={canvasSize.width}
-            height={canvasSize.height}
-          />
-          
-          {/* Legend */}
-          <div className="absolute bottom-2 left-2 bg-gray-900 rounded p-3 text-sm" style={{ backgroundColor: 'rgba(17, 24, 39, 0.95)' }}>
-            <div className="text-white font-semibold mb-2">Path Legend</div>
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-1 bg-blue-500 rounded-full"></div>
-                <span className="text-gray-200">Planned Path</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-1 bg-green-500 rounded-full"></div>
-                <span className="text-gray-200">Actual Path</span>
-              </div>
-            </div>
+            {/* Enhanced overlay canvas */}
+            <canvas
+              ref={overlayCanvasRef}
+              width={canvasSize.width}
+              height={canvasSize.height}
+              className="absolute top-0 left-0 pointer-events-none"
+              style={{ width: '100%', height: '100%' }}
+            />
+            
+            {/* Enhanced field overlay component */}
+            <EnhancedFieldOverlay
+              canvasRef={overlayCanvasRef}
+              width={canvasSize.width}
+              height={canvasSize.height}
+            />
           </div>
         </div>
+        
+        {/* Telemetry Info Panel */}
+        <TelemetryInfoPanel />
       </div>
-      
-      {/* Telemetry Info Panel */}
-      <TelemetryInfoPanel />
     </div>
-  </div>
   );
 };
 
