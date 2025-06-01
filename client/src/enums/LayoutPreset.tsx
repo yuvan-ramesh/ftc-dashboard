@@ -10,12 +10,16 @@ import GraphView from '@/components/views/GraphView/GraphView';
 import ConfigView from '@/components/views/ConfigView/ConfigView';
 import TelemetryView from '@/components/views/TelemetryView';
 import FieldView from '@/components/views/FieldView/FieldView';
+import GeneralDashboard from '@/components/views/GeneralDashboard';
+import EnhancedTelemetryView from '@/components/views/EnhancedTelemetryView';
+import DrivetrainView from '@/components/subsystems/Drivetrain/DrivetrainView';
 
 const LayoutPreset = {
   DEFAULT: 'DEFAULT',
   FIELD: 'FIELD',
   GRAPH: 'GRAPH',
   ORIGINAL: 'ORIGINAL',
+  ENHANCED: 'ENHANCED',
   CONFIGURABLE: 'CONFIGURABLE',
 } as const;
 
@@ -94,6 +98,31 @@ const LAYOUT_DETAILS: { [key in Values<typeof LayoutPreset>]: Layout } = {
         </Tile>
         <Tile row={2} col={2}>
           <TelemetryView />
+        </Tile>
+      </TileGrid>
+    ),
+  },
+  [LayoutPreset.ENHANCED]: {
+    name: 'Enhanced',
+    content: (
+      <TileGrid gridTemplate="30% 40% 30% / 25% 50% 25%">
+        <Tile row={1} col="1 / span 3">
+          <GeneralDashboard />
+        </Tile>
+        <Tile row={2} col={1}>
+          <EnhancedTelemetryView />
+        </Tile>
+        <Tile row={2} col={2}>
+          <FieldView />
+        </Tile>
+        <Tile row={2} col={3}>
+          <DrivetrainView />
+        </Tile>
+        <Tile row={3} col="1 / span 2">
+          <GraphView />
+        </Tile>
+        <Tile row={3} col={3}>
+          <ConfigView />
         </Tile>
       </TileGrid>
     ),

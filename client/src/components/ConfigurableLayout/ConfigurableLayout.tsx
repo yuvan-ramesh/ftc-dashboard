@@ -24,6 +24,11 @@ import RecorderView from '@/components/views/RecorderView/RecorderView';
 import CameraView from '@/components/views/CameraView';
 import OpModeView from '@/components/views/OpModeView';
 import LoggingView from '@/components/views/LoggingView/LoggingView';
+import DrivetrainView from '@/components/subsystems/Drivetrain/DrivetrainView';
+import IntakeView from '@/components/subsystems/Intake/IntakeView';
+import DepositView from '@/components/subsystems/Deposit/DepositView';
+import EnhancedTelemetryView from '@/components/views/EnhancedTelemetryView';
+import GeneralDashboard from '@/components/views/GeneralDashboard';
 
 import RadialFab from './RadialFab/RadialFab';
 import RadialFabChild from './RadialFab/RadialFabChild';
@@ -70,6 +75,11 @@ const VIEW_MAP: { [key in ConfigurableView]: ReactElement } = {
   [ConfigurableView.CAMERA_VIEW]: <CameraView />,
   [ConfigurableView.OPMODE_VIEW]: <OpModeView />,
   [ConfigurableView.LOGGING_VIEW]: <LoggingView />,
+  [ConfigurableView.DRIVETRAIN_VIEW]: <DrivetrainView />,
+  [ConfigurableView.INTAKE_VIEW]: <IntakeView />,
+  [ConfigurableView.DEPOSIT_VIEW]: <DepositView />,
+  [ConfigurableView.ENHANCED_TELEMETRY_VIEW]: <EnhancedTelemetryView />,
+  [ConfigurableView.GENERAL_DASHBOARD]: <GeneralDashboard />,
 };
 
 const LOCAL_STORAGE_LAYOUT_KEY = 'configurableLayoutStorage';

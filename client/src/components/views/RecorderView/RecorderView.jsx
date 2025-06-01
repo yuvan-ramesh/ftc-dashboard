@@ -7,7 +7,7 @@ import { setReplayOverlay } from '@/store/actions/replay';
 import BaseView, { BaseViewHeading } from '@/components/views/BaseView';
 
 import OpModeStatus from '@/enums/OpModeStatus';
-import { ReactComponent as DeleteSVG } from '@/assets/icons/delete.svg';
+import { ReactComponent as DeleteSVG } from '@/assets/icons/delete_x.svg';
 import { ReactComponent as DownloadSVG } from '@/assets/icons/file_download.svg';
 
 const TELEMETRY_RECORDING_MAX_SIZE = 10000; // 2:30 mins at 15ms loop times

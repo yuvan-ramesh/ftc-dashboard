@@ -9,6 +9,10 @@ import statusReducer from './status';
 import cameraReducer from './camera';
 import settingsReducer from './settings';
 import gamepadReducer from './gamepad';
+import subsystemsReducer from './subsystems';
+import enhancedTelemetryReducer from './enhancedTelemetry';
+import generalReducer from './general';
+import graphsReducer from './graphs';
 import { createDispatchHook } from 'react-redux';
 
 const rootReducer = combineReducers({
@@ -20,6 +24,10 @@ const rootReducer = combineReducers({
   camera: cameraReducer,
   settings: settingsReducer,
   gamepad: gamepadReducer,
+  subsystems: subsystemsReducer,
+  enhancedTelemetry: enhancedTelemetryReducer,
+  general: generalReducer,
+  graphs: graphsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

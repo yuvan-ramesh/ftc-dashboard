@@ -10,6 +10,7 @@ import { ReactComponent as ApiIcon } from '@/assets/icons/api.svg';
 import { ReactComponent as SubjectIcon } from '@/assets/icons/subject.svg';
 import { ReactComponent as WidgetIcon } from '@/assets/icons/widgets.svg';
 import { ReactComponent as ListIcon } from '@/assets/icons/list.svg';
+import { ReactComponent as GamepadIcon } from '@/assets/icons/gamepad.svg';
 
 type ViewPickerProps = {
   isOpen: boolean;
@@ -120,6 +121,42 @@ const listContent = [
     icon: <CameraIcon className="h-6 w-6" />,
     customStyles: 'focus:ring-green-600',
     iconBg: 'bg-green-500',
+  },
+  // New views
+  {
+    title: 'Drivetrain',
+    view: ConfigurableView.DRIVETRAIN_VIEW,
+    icon: <GamepadIcon className="h-6 w-6" />,
+    customStyles: 'focus:ring-indigo-600',
+    iconBg: 'bg-indigo-500',
+  },
+  {
+    title: 'Intake',
+    view: ConfigurableView.INTAKE_VIEW,
+    icon: <WidgetIcon className="h-6 w-6 rotate-180" />,
+    customStyles: 'focus:ring-cyan-600',
+    iconBg: 'bg-cyan-500',
+  },
+  {
+    title: 'Deposit',
+    view: ConfigurableView.DEPOSIT_VIEW,
+    icon: <WidgetIcon className="h-6 w-6" />,
+    customStyles: 'focus:ring-teal-600',
+    iconBg: 'bg-teal-500',
+  },
+  {
+    title: 'Enhanced Telemetry',
+    view: ConfigurableView.ENHANCED_TELEMETRY_VIEW,
+    icon: <ListIcon className="h-6 w-6" />,
+    customStyles: 'focus:ring-amber-600',
+    iconBg: 'bg-amber-500',
+  },
+  {
+    title: 'General Dashboard',
+    view: ConfigurableView.GENERAL_DASHBOARD,
+    icon: <ChartIcon className="h-6 w-6" />,
+    customStyles: 'focus:ring-rose-600',
+    iconBg: 'bg-rose-500',
   },
 ];
 

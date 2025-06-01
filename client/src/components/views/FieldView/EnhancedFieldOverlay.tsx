@@ -1,0 +1,259 @@
+import React, { useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/reducers';
+
+interface EnhancedFieldOverlayProps {
+  canvasRef: React.RefObject<HTMLCanvasElement>;
+  width: number;
+  height: number;
+}
+
+const EnhancedFieldOverlay: React.FC<EnhancedFieldOverlayProps> = ({
+  canvasRef,
+  width,
+  height,
+}) => {
+  const drivetrain = useSelector((state: RootState) => state.subsystems.drivetrain);
+  const animationFrameRef = useRef<number>();
+  
+  // Field dimensions in inches (FTC standard field is 144" x 144")
+  const FIELD_SIZE = 144;
+  const scale = Math.min(width, height) / FIELD_SIZE;
+  
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    const render = () => {
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+      
+      // Set coordinate system (center origin, +X right, +Y up)
+      ctx.save();
+      ctx.translate(width / 2, height / 2);
+      ctx.scale(scale, -scale); // Negative Y scale to flip Y axis
+      
+      // Draw field grid
+      drawFieldGrid(ctx);
+      
+      // Draw position history trail
+      drawPositionTrail(ctx, drivetrain.positionHistory);
+      
+      // Draw robot
+      drawRobot(ctx, drivetrain.position, drivetrain.heading, drivetrain.centerOfGravity);
+      
+      // Draw coordinate labels
+      ctx.restore();
+      drawCoordinateLabels(ctx, width, height, scale);
+      
+      // Draw telemetry overlay
+      drawTelemetryOverlay(ctx, drivetrain, width, height);
+      
+      animationFrameRef.current = requestAnimationFrame(render);
+    };
+    
+    render();
+    
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [drivetrain, width, height, scale]);
+  
+  return null; // This component only manages the canvas drawing
+};
+
+function drawFieldGrid(ctx: CanvasRenderingContext2D) {
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+  ctx.lineWidth = 0.5;
+  
+  // Draw grid lines every 12 inches
+  for (let x = -72; x <= 72; x += 12) {
+    ctx.beginPath();
+    ctx.moveTo(x, -72);
+    ctx.lineTo(x, 72);
+    ctx.stroke();
+  }
+  
+  for (let y = -72; y <= 72; y += 12) {
+    ctx.beginPath();
+    ctx.moveTo(-72, y);
+    ctx.lineTo(72, y);
+    ctx.stroke();
+  }
+  
+  // Draw field boundary
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(-72, -72, 144, 144);
+  
+  // Draw center lines
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(-72, 0);
+  ctx.lineTo(72, 0);
+  ctx.moveTo(0, -72);
+  ctx.lineTo(0, 72);
+  ctx.stroke();
+}
+
+function drawPositionTrail(
+  ctx: CanvasRenderingContext2D,
+  positionHistory: Array<{ position: { x: number; y: number; z: number }; timestamp: number }>
+) {
+  if (positionHistory.length < 2) return;
+  
+  ctx.strokeStyle = 'rgba(59, 130, 246, 0.4)'; // Blue trail
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  
+  positionHistory.forEach((entry, index) => {
+    if (index === 0) {
+      ctx.moveTo(entry.position.x, entry.position.y);
+    } else {
+      ctx.lineTo(entry.position.x, entry.position.y);
+    }
+  });
+  
+  ctx.stroke();
+  
+  // Draw dots at each position
+  ctx.fillStyle = 'rgba(59, 130, 246, 0.6)';
+  positionHistory.forEach((entry, index) => {
+    const radius = index === positionHistory.length - 1 ? 3 : 1;
+    ctx.beginPath();
+    ctx.arc(entry.position.x, entry.position.y, radius, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+function drawRobot(
+  ctx: CanvasRenderingContext2D,
+  position: { x: number; y: number; z: number },
+  heading: number,
+  centerOfGravity: { x: number; y: number }
+) {
+  ctx.save();
+  ctx.translate(position.x, position.y);
+  ctx.rotate(heading);
+  
+  // Robot dimensions (18" x 18" standard)
+  const robotSize = 18;
+  
+  // Draw robot body
+  ctx.fillStyle = 'rgba(59, 130, 246, 0.3)';
+  ctx.strokeStyle = '#3B82F6';
+  ctx.lineWidth = 2;
+  ctx.fillRect(-robotSize / 2, -robotSize / 2, robotSize, robotSize);
+  ctx.strokeRect(-robotSize / 2, -robotSize / 2, robotSize, robotSize);
+  
+  // Draw heading indicator
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, robotSize / 2);
+  ctx.strokeStyle = '#F59E0B';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  
+  // Draw arrow for heading
+  ctx.beginPath();
+  ctx.moveTo(-3, robotSize / 2 - 5);
+  ctx.lineTo(0, robotSize / 2);
+  ctx.lineTo(3, robotSize / 2 - 5);
+  ctx.stroke();
+  
+  // Draw center of gravity
+  ctx.beginPath();
+  ctx.arc(centerOfGravity.x, centerOfGravity.y, 2, 0, Math.PI * 2);
+  ctx.fillStyle = centerOfGravity.x * centerOfGravity.x + centerOfGravity.y * centerOfGravity.y > 25
+    ? '#EF4444' // Red if outside safe zone
+    : '#10B981'; // Green if safe
+  ctx.fill();
+  
+  // Draw COG crosshair
+  ctx.strokeStyle = ctx.fillStyle;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(centerOfGravity.x - 4, centerOfGravity.y);
+  ctx.lineTo(centerOfGravity.x + 4, centerOfGravity.y);
+  ctx.moveTo(centerOfGravity.x, centerOfGravity.y - 4);
+  ctx.lineTo(centerOfGravity.x, centerOfGravity.y + 4);
+  ctx.stroke();
+  
+  ctx.restore();
+}
+
+function drawCoordinateLabels(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  scale: number
+) {
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+  ctx.font = '12px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  
+  // X-axis labels
+  for (let x = -60; x <= 60; x += 60) {
+    const screenX = width / 2 + x * scale;
+    ctx.fillText(`${x}"`, screenX, height - 10);
+  }
+  
+  // Y-axis labels
+  ctx.textAlign = 'right';
+  for (let y = -60; y <= 60; y += 60) {
+    const screenY = height / 2 - y * scale;
+    ctx.fillText(`${y}"`, 30, screenY);
+  }
+  
+  // Field labels
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.font = '14px sans-serif';
+  ctx.fillText('Red Alliance', width / 2 + 60 * scale, 20);
+  ctx.fillText('Blue Alliance', width / 2 - 60 * scale, 20);
+  ctx.fillText('Audience', width - 60, height / 2);
+  ctx.fillText('Backstage', 60, height / 2);
+}
+
+function drawTelemetryOverlay(
+  ctx: CanvasRenderingContext2D,
+  drivetrain: any,
+  width: number,
+  height: number
+) {
+  // Position info
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(10, 10, 200, 90);
+  
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '14px monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  
+  ctx.fillText(`X: ${drivetrain.position.x.toFixed(1)}"`, 20, 20);
+  ctx.fillText(`Y: ${drivetrain.position.y.toFixed(1)}"`, 20, 40);
+  ctx.fillText(`θ: ${(drivetrain.heading * 180 / Math.PI).toFixed(1)}°`, 20, 60);
+  ctx.fillText(`COG: (${drivetrain.centerOfGravity.x.toFixed(1)}, ${drivetrain.centerOfGravity.y.toFixed(1)})`, 20, 80);
+  
+  // Velocity info
+  const velocity = drivetrain.velocity;
+  const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2);
+  
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(width - 210, 10, 200, 70);
+  
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'right';
+  ctx.fillText(`Speed: ${speed.toFixed(1)} in/s`, width - 20, 20);
+  ctx.fillText(`Vx: ${velocity.x.toFixed(1)} in/s`, width - 20, 40);
+  ctx.fillText(`Vy: ${velocity.y.toFixed(1)} in/s`, width - 20, 60);
+}
+
+export default EnhancedFieldOverlay;
