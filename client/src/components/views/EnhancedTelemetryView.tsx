@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store/reducers';
 import { toggleTelemetryPause, addGraph, createGraphConfig } from '@/store/actions/subsystems';
-import BaseView from './BaseView';
 import { ReactComponent as PlayIcon } from '@/assets/icons/play_arrow.svg';
 import { ReactComponent as PauseIcon } from '@/assets/icons/pause.svg';
 import { ReactComponent as RecordIcon } from '@/assets/icons/create.svg';
@@ -125,7 +124,7 @@ const EnhancedTelemetryView: React.FC = () => {
   };
   
   return (
-    <BaseView>
+    <div className="h-full overflow-y-auto p-4">
       {/* Header with controls */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-3">
@@ -348,7 +347,7 @@ const EnhancedTelemetryView: React.FC = () => {
       <div className="mt-6">
         <TelemetryGraphManager />
       </div>
-    </BaseView>
+    </div>
   );
 };
 

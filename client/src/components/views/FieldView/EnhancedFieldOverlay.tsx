@@ -77,8 +77,7 @@ const EnhancedFieldOverlay: React.FC<EnhancedFieldOverlayProps> = ({
       ctx.restore();
       drawCoordinateLabels(ctx, width, height, scale);
       
-      // Draw telemetry overlay
-      drawTelemetryOverlay(ctx, drivetrain, width, height);
+      // Telemetry overlay removed - now displayed in side panel
       
       animationFrameRef.current = requestAnimationFrame(render);
     };
@@ -274,39 +273,5 @@ function drawCoordinateLabels(
   ctx.fillText('Backstage', 60, height / 2);
 }
 
-function drawTelemetryOverlay(
-  ctx: CanvasRenderingContext2D,
-  drivetrain: any,
-  width: number,
-  height: number
-) {
-  // Position info
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(10, 10, 200, 90);
-  
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = '14px monospace';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  
-  ctx.fillText(`X: ${drivetrain.position.x.toFixed(1)}"`, 20, 20);
-  ctx.fillText(`Y: ${drivetrain.position.y.toFixed(1)}"`, 20, 40);
-  ctx.fillText(`θ: ${(drivetrain.heading * 180 / Math.PI).toFixed(1)}°`, 20, 60);
-  ctx.fillText(`COG: (${drivetrain.centerOfGravity.x.toFixed(1)}, ${drivetrain.centerOfGravity.y.toFixed(1)})`, 20, 80);
-  
-  
-  // Velocity info
-  const velocity = drivetrain.velocity;
-  const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2);
-  
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(width - 210, 10, 200, 70);
-  
-  ctx.fillStyle = '#FFFFFF';
-  ctx.textAlign = 'right';
-  ctx.fillText(`Speed: ${speed.toFixed(1)} in/s`, width - 20, 20);
-  ctx.fillText(`Vx: ${velocity.x.toFixed(1)} in/s`, width - 20, 40);
-  ctx.fillText(`Vy: ${velocity.y.toFixed(1)} in/s`, width - 20, 60);
-}
 
 export default EnhancedFieldOverlay;

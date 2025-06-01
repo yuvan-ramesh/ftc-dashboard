@@ -148,20 +148,21 @@ const SubsystemTelemetry: React.FC<SubsystemTelemetryProps> = ({ subsystemId, su
             </button>
             
             {/* Replay button */}
-            {recordings.length > 0 && (
-              <button
-                onClick={isReplaying ? handleStopReplay : handleStartReplay}
-                className={`px-2 py-1 rounded text-sm font-medium transition-colors flex items-center gap-1 ${
-                  isReplaying
-                    ? 'bg-green-600 hover:bg-green-700 text-white'
-                    : 'bg-gray-700 hover:bg-gray-600 text-white'
-                }`}
-                disabled={isRecording || selectedRecording < 0}
-              >
-                <RefreshIcon className="w-3 h-3" />
-                {isReplaying ? 'Stop' : 'Replay'}
-              </button>
-            )}
+            <button
+              onClick={isReplaying ? handleStopReplay : handleStartReplay}
+              className={`px-2 py-1 rounded text-sm font-medium transition-colors flex items-center gap-1 ${
+                isReplaying
+                  ? 'bg-green-600 hover:bg-green-700 text-white'
+                  : recordings.length > 0 && selectedRecording >= 0
+                  ? 'bg-gray-700 hover:bg-gray-600 text-white'
+                  : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+              }`}
+              disabled={isRecording || selectedRecording < 0 || recordings.length === 0}
+              title={recordings.length === 0 ? 'No recordings available' : 'Replay recording'}
+            >
+              <RefreshIcon className="w-3 h-3" />
+              {isReplaying ? 'Stop' : 'Replay'}
+            </button>
           </div>
         </div>
         
