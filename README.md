@@ -4,17 +4,56 @@ FTC Dashboard provides telemetry and monitoring tools for FTC robots during oper
 
 - Live telemetry with plots and field graphics
 - Live configuration variables
-- Camera streaming
+- Camera streaming with enhanced detection capabilities
 - Limited op mode controls and gamepad support
   - Note: Gamepad support is volatile due to unstable browser APIs
 - Custom dashboard layouts
 - Telemetry CSV export
+- **NEW**: Subsystem-specific dashboards for detailed monitoring
+- **NEW**: Enhanced field visualization with robot position tracking
+- **NEW**: Real-time servo position indicators
+- **NEW**: Comprehensive telemetry with pause and replay capabilities
 
 Check out our [online documentation](https://acmerobotics.github.io/ftc-dashboard).
 
 |       Screenshot of custom layout        |          Screenshot with theme           |
 | :--------------------------------------: | :--------------------------------------: |
 | ![](docs/images/readme-screenshot-2.jpg) | ![](docs/images/readme-screenshot-1.jpg) |
+
+## Enhanced Features
+
+The dashboard now includes comprehensive subsystem monitoring capabilities:
+
+### Subsystem Dashboards
+- **Drivetrain Dashboard**: Real-time position tracking, velocity/acceleration monitoring, encoder values, center of gravity indicator, and PID performance graphs
+- **Intake Dashboard**: Slide position control, claw status with sample detection, state machine visualization, and servo monitoring
+- **Deposit Dashboard**: Slide position control with height zones, deposit status indicator, and state machine display
+- **Camera Dashboard**: Enhanced camera feed with object detection capabilities
+
+### Enhanced Field Visualization
+- Full field coordinate display (-72" to 72")
+- Real-time robot position tracking (X, Y, θ)
+- Path visualization showing planned vs actual paths
+- Position history trail
+- Grid overlay for reference
+
+### Improved Telemetry System
+- Sectioned telemetry organized by subsystem
+- Pause functionality for debugging
+- One-click graph creation for numeric values
+- Real-time updates with timestamps
+
+### Additional Features
+- Sidebar navigation for easy access to different dashboards
+- General dashboard bar with match timer, power monitoring, and OpMode controls
+- Enhanced servo position indicators throughout the interface
+
+## Documentation
+
+For detailed technical information about the enhanced features:
+- [Product Requirements Document (PRD)](PRD_FTC_Dashboard_Enhancement.md)
+- [Technical Design Document](TECHNICAL_DESIGN_DOC.md)
+- [Enhanced Features Guide](ENHANCED_FEATURES.md)
 
 # Installation
 
