@@ -13,6 +13,19 @@ import subsystemsReducer from './subsystems';
 import enhancedTelemetryReducer from './enhancedTelemetry';
 import generalReducer from './general';
 import graphsReducer from './graphs';
+
+// New individual reducers
+import servosReducer from './servos';
+import slidesReducer from './slides';
+import statesReducer from './states';
+import drivetrainDataReducer from './drivetrainData';
+import graphDataReducer from './graphData';
+import opModeDataReducer from './opModeData';
+import powerDataReducer from './powerData';
+import connectionDataReducer from './connectionData';
+import cameraDataReducer from './cameraData';
+import clawDataReducer from './clawData';
+
 import { createDispatchHook } from 'react-redux';
 
 const rootReducer = combineReducers({
@@ -28,6 +41,18 @@ const rootReducer = combineReducers({
   enhancedTelemetry: enhancedTelemetryReducer,
   general: generalReducer,
   graphs: graphsReducer,
+  
+  // New individual dashboard data stores
+  servos: servosReducer,
+  slides: slidesReducer,
+  states: statesReducer,
+  drivetrainData: drivetrainDataReducer,
+  graphData: graphDataReducer,
+  opModeData: opModeDataReducer,
+  powerData: powerDataReducer,
+  connectionData: connectionDataReducer,
+  cameraData: cameraDataReducer,
+  clawData: clawDataReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

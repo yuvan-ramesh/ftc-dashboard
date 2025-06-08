@@ -83,3 +83,18 @@ export type {
 
 export { SET_REPLAY_OVERLAY } from './replay';
 export type { SetReplayOverlayAction } from './replay';
+
+// Export all individual dashboard types
+export * from './servos';
+export * from './slides';
+export * from './states';
+export * from './drivetrainData';
+export * from './graphData';
+export * from './opModeData';
+export * from './powerData';
+export * from './connectionData';
+export * from './cameraData';
+export * from './clawData';
+
+// Keep subsystems export
+export * from './subsystems';

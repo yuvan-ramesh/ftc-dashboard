@@ -129,3 +129,124 @@ export const createGraphConfig = (
   isVisible: true,
   ...options,
 });
+
+// Batch update actions for performance
+export const batchUpdateDrivetrain = (updates: {
+  position?: DrivetrainState['position'];
+  velocity?: DrivetrainState['velocity'];
+  acceleration?: DrivetrainState['acceleration'];
+  heading?: number;
+  encoders?: Partial<DrivetrainState['encoders']>;
+}): UpdateDrivetrainAction => ({
+  type: UPDATE_DRIVETRAIN,
+  payload: updates,
+});
+
+// Servo control actions
+export const updateIntakeServos = (servos: Partial<IntakeState['servos']>): UpdateIntakeAction => ({
+  type: UPDATE_INTAKE,
+  payload: { servos: { ...servos } },
+});
+
+export const updateDepositServos = (servos: Partial<DepositState['servos']>): UpdateDepositAction => ({
+  type: UPDATE_DEPOSIT,
+  payload: { servos: { ...servos } },
+});
+
+// State machine actions
+export const setIntakeState = (state: IntakeState['state']): UpdateIntakeAction => ({
+  type: UPDATE_INTAKE,
+  payload: { state },
+});
+
+export const setDepositState = (state: DepositState['state']): UpdateDepositAction => ({
+  type: UPDATE_DEPOSIT,
+  payload: { state },
+});
+
+// Match timer actions
+export const updateMatchTimer = (timer: Partial<GeneralState['matchTimer']>): UpdateGeneralAction => ({
+  type: UPDATE_GENERAL,
+  payload: { matchTimer: timer as GeneralState['matchTimer'] },
+});
+
+export const startMatch = (mode: 'AUTO' | 'TELEOP'): UpdateGeneralAction => ({
+  type: UPDATE_GENERAL,
+  payload: {
+    matchTimer: {
+      mode,
+      isRunning: true,
+      timeRemaining: mode === 'AUTO' ? 30 : 120,
+      totalTime: mode === 'AUTO' ? 30 : 120,
+    },
+  },
+});
+
+export const stopMatch = (): UpdateGeneralAction => ({
+  type: UPDATE_GENERAL,
+  payload: {
+    matchTimer: {
+      mode: 'STOPPED',
+      isRunning: false,
+      timeRemaining: 0,
+      totalTime: 150,
+    },
+  },
+});
+
+// Power monitoring actions
+export const updatePower = (voltage: number, current: number): UpdateGeneralAction => {
+  const batteryPercentage = Math.max(0, Math.min(100, ((voltage - 11.0) / 2.0) * 100));
+  return {
+    type: UPDATE_GENERAL,
+    payload: { voltage, current, batteryPercentage },
+  };
+};
+
+// Camera detection actions
+export const updateDetectedObjects = (objects: CameraEnhancedState['detectedObjects']): UpdateCameraEnhancedAction => ({
+  type: UPDATE_CAMERA_ENHANCED,
+  payload: { detectedObjects: objects },
+});
+
+// Telemetry helper actions
+export const addTelemetryValue = (section: string, key: string, value: string | number | boolean, unit?: string): UpdateTelemetrySectionAction => ({
+  type: UPDATE_TELEMETRY_SECTION,
+  sectionId: section,
+  values: [{
+    key,
+    value,
+    timestamp: Date.now(),
+    unit,
+  }],
+});
+
+// Reset actions
+export const resetDrivetrain = (): UpdateDrivetrainAction => ({
+  type: UPDATE_DRIVETRAIN,
+  payload: {
+    position: { x: 0, y: 0, z: 0 },
+    velocity: { x: 0, y: 0, z: 0 },
+    acceleration: { x: 0, y: 0, z: 0 },
+    heading: 0,
+    positionHistory: [],
+  },
+});
+
+export const resetAllSubsystems = () => (dispatch: any) => {
+  dispatch(resetDrivetrain());
+  dispatch(updateIntake({ 
+    slidePosition: 0, 
+    slideTarget: 0, 
+    hasSample: false,
+    state: 'IDLE',
+    servos: { claw: 0, wrist: 90, arm: 45, rotation: 180 }
+  }));
+  dispatch(updateDeposit({ 
+    slidePosition: 0, 
+    slideTarget: 0, 
+    isDeposited: false,
+    state: 'IDLE',
+    servos: { bucket: 0, arm: 90, wrist: 45, rotation: 180 }
+  }));
+};
